@@ -1,24 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BLinkd</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
- <h2>Cars</h2>
-<div class="charms" id="cars"></div>
+  <div class="page">
+    <header class="topbar">
+      <h1>CHOOSE YOUR CHARMS HERE :</h1>
+      <div class="hint">Click tiles to select • max <span id="maxCount">6</span></div>
+    </header>
 
-<h2>Pink</h2>
-<div class="charms" id="pink"></div>
+    <main class="layout">
+      <!-- LEFT: categories + grid -->
+      <section class="left">
+        <nav class="tabs" id="tabs"></nav>
+        <div class="grid" id="grid"></div>
+      </section>
 
-<h2>Streetstyle</h2>
-<div class="charms" id="streetstyle"></div>
+      <!-- RIGHT: selection -->
+      <aside class="right">
+        <div class="panel">
+          <div class="panelTitle">
+            Your Selection: <span id="count">0</span>/<span id="maxCount2">6</span>
+          </div>
 
-<hr>
+          <div class="selectedRow" id="selected"></div>
 
-<h2>Your Selection: <span id="count">0</span>/6</h2>
-<div class="selected" id="selected"></div>
+          <div class="codeBlock">
+            <div class="codeLabel">Bracelet code</div>
+            <div class="codeValue" id="code">—</div>
+            <button class="btn" id="copy">Copy code</button>
+            <button class="btn ghost" id="clear">Clear</button>
+          </div>
 
-<p>Bracelet code: <span id="code">—</span></p>
-<button id="copy">Copy code</button>
+          <div class="note">
+            Tip: Customers can DM you the code + any custom requests.
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+ 
