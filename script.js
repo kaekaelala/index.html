@@ -1,16 +1,30 @@
-/ ===== BLinkd Customizer (TikTok-style) =====
+// ===== BLinkd Customizer (Folder-based categories) =====
 
 const MAX = 6;
 
-// IMPORTANT: these must match your real filenames in /charms exactly
 const data = {
-  Cars: 
-  Pink: 
-  Streetstyle: 
+  Pink: {
+    path: "pink",
+    files: [
+      "rose.png",
+      "lace.png",
+      "vanilla-pink.png",
+      "pink-tiles.png"
+    ]
+  },
+  Singers: {
+    path: "singers",
+    files: [
+      "asap.png",
+      "drake.png",
+      "pnd.png",
+      "transform.png"
+    ]
+  }
 };
 
 let activeCategory = Object.keys(data)[0];
-let selected = []; // array of filenames
+let selected = [];
 
 // elements
 const tabsEl = document.getElementById("tabs");
@@ -18,10 +32,11 @@ const gridEl = document.getElementById("grid");
 const selectedEl = document.getElementById("selected");
 const countEl = document.getElementById("count");
 const codeEl = document.getElementById("code");
+
 document.getElementById("maxCount").textContent = MAX;
 document.getElementById("maxCount2").textContent = MAX;
 
-// Build tabs
+// Tabs
 function renderTabs() {
   tabsEl.innerHTML = "";
   Object.keys(data).forEach(cat => {
@@ -37,16 +52,17 @@ function renderTabs() {
   });
 }
 
-// Build grid for active category
+// Grid
 function renderGrid() {
   gridEl.innerHTML = "";
+  const { path, files } = data[activeCategory];
 
-  data[activeCategory].forEach(filename => {
+  files.forEach(filename => {
     const tile = document.createElement("div");
-    tile.className = "tile" + (selected.includes(filename) ? " selected" : "");
+    tile.className = "tile" + (selected.includes(`${path}/${filename}`) ? " selected" : "");
 
     const img = document.createElement("img");
-    img.src = `charms/${filename}`;
+    img.src = `charms/${path}/${filename}`;
     img.alt = filename;
 
     const badge = document.createElement("div");
@@ -56,14 +72,15 @@ function renderGrid() {
     tile.appendChild(img);
     tile.appendChild(badge);
 
-    tile.onclick = () => toggle(filename);
+    tile.onclick = () => toggle(`${path}/${filename}`);
 
     gridEl.appendChild(tile);
   });
 }
 
-function toggle(filename) {
-  const i = selected.indexOf(filename);
+// Toggle select
+function toggle(key) {
+  const i = selected.indexOf(key);
 
   if (i >= 0) {
     selected.splice(i, 1);
@@ -72,25 +89,25 @@ function toggle(filename) {
       alert(`Max ${MAX} charms`);
       return;
     }
-    selected.push(filename);
+    selected.push(key);
   }
 
   renderGrid();
   renderSelected();
 }
 
+// Selected panel
 function renderSelected() {
   countEl.textContent = selected.length;
-
   selectedEl.innerHTML = "";
-  selected.forEach(filename => {
+
+  selected.forEach(key => {
     const img = document.createElement("img");
-    img.src = `charms/${filename}`;
-    img.alt = filename;
-    img.title = "Click to remove";
+    img.src = `charms/${key}`;
+    img.alt = key;
 
     img.onclick = () => {
-      selected = selected.filter(x => x !== filename);
+      selected = selected.filter(x => x !== key);
       renderGrid();
       renderSelected();
     };
@@ -98,21 +115,18 @@ function renderSelected() {
     selectedEl.appendChild(img);
   });
 
-  // code = filenames without .png, joined
-  const code = selected.map(x => x.replace(".png","")).join("-");
+  const code = selected.map(x => x.replace("/", "-").replace(".png", "")).join("-");
   codeEl.textContent = code || "—";
 }
 
-// Copy + Clear
+// Buttons
 document.getElementById("copy").onclick = async () => {
-  const text = codeEl.textContent;
-  if (!text || text === "—") return alert("Select charms first");
-  try {
-    await navigator.clipboard.writeText(text);
-    alert("Copied!");
-  } catch (e) {
-    alert("Copy failed — try selecting the code and copying manually.");
+  if (!codeEl.textContent || codeEl.textContent === "—") {
+    alert("Select charms first");
+    return;
   }
+  await navigator.clipboard.writeText(codeEl.textContent);
+  alert("Copied!");
 };
 
 document.getElementById("clear").onclick = () => {
@@ -121,7 +135,11 @@ document.getElementById("clear").onclick = () => {
   renderSelected();
 };
 
-// Start
+// Init
+renderTabs();
+renderGrid();
+renderSelected();
+
 renderTabs();
 renderGrid();
 renderSelected();
