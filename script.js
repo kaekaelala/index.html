@@ -1,4 +1,4 @@
-// ===== BLinkd Customizer (TikTok-style) =====
+/ ===== BLinkd Customizer (TikTok-style) =====
 
 const MAX = 6;
 
