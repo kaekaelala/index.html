@@ -1,9 +1,22 @@
 const charmSections = document.querySelectorAll(".charms");
 
+const charmSections = document.querySelectorAll(".charms");
+
 const charms = [
-  "theweeknd.png",
   "drake.png",
-  "transform.png"
+  "theweeknd.png",
+  "transform.png",
+  "pnd.png"
+];
+
+charmSections.forEach(section => {
+  charms.forEach(charm => {
+    const img = document.createElement("img");
+    img.src = `charms/${charm}`;
+    section.appendChild(img);
+  });
+});
+
 ];
 
 charmSections.forEach(section => {
