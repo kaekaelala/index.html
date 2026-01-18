@@ -4,9 +4,9 @@ const MAX = 6;
 
 // IMPORTANT: these must match your real filenames in /charms exactly
 const data = {
-  Cars: ["transform.png"],
-  Pink: ["drake.png"],
-  Streetstyle: ["theweeknd.png", "pnd.png"]
+  Cars: 
+  Pink: 
+  Streetstyle: 
 };
 
 let activeCategory = Object.keys(data)[0];
