@@ -1,30 +1,68 @@
-const MAX = 6;
-let selected = [];
+// ===== BLinkd Customizer (TikTok-style) =====
 
-const charmsByCategory = {
-  cars:          // put your car PNGs here
-  pink:              // put your pink PNGs here
-  streetstyle:  //streetstyle here
-  singers : ["drake.png","pnd.png","transform.png"]// singers here
+const MAX = 6;
+
+// IMPORTANT: these must match your real filenames in /charms exactly
+const data = {
+  Cars: ["transform.png"],
+  Pink: ["drake.png"],
+  Streetstyle: ["theweeknd.png", "pnd.png"]
 };
 
-function renderCategory(categoryId) {
-  const wrap = document.getElementById(categoryId);
-  if (!wrap) return;
-  wrap.innerHTML = "";
+let activeCategory = Object.keys(data)[0];
+let selected = []; // array of filenames
 
-  charmsByCategory[categoryId].forEach(filename => {
+// elements
+const tabsEl = document.getElementById("tabs");
+const gridEl = document.getElementById("grid");
+const selectedEl = document.getElementById("selected");
+const countEl = document.getElementById("count");
+const codeEl = document.getElementById("code");
+document.getElementById("maxCount").textContent = MAX;
+document.getElementById("maxCount2").textContent = MAX;
+
+// Build tabs
+function renderTabs() {
+  tabsEl.innerHTML = "";
+  Object.keys(data).forEach(cat => {
+    const btn = document.createElement("button");
+    btn.className = "tab" + (cat === activeCategory ? " active" : "");
+    btn.textContent = cat;
+    btn.onclick = () => {
+      activeCategory = cat;
+      renderTabs();
+      renderGrid();
+    };
+    tabsEl.appendChild(btn);
+  });
+}
+
+// Build grid for active category
+function renderGrid() {
+  gridEl.innerHTML = "";
+
+  data[activeCategory].forEach(filename => {
+    const tile = document.createElement("div");
+    tile.className = "tile" + (selected.includes(filename) ? " selected" : "");
+
     const img = document.createElement("img");
     img.src = `charms/${filename}`;
     img.alt = filename;
 
-    img.onclick = () => toggleSelect(filename);
+    const badge = document.createElement("div");
+    badge.className = "badge";
+    badge.textContent = "Selected";
 
-    wrap.appendChild(img);
+    tile.appendChild(img);
+    tile.appendChild(badge);
+
+    tile.onclick = () => toggle(filename);
+
+    gridEl.appendChild(tile);
   });
 }
 
-function toggleSelect(filename) {
+function toggle(filename) {
   const i = selected.indexOf(filename);
 
   if (i >= 0) {
@@ -37,35 +75,53 @@ function toggleSelect(filename) {
     selected.push(filename);
   }
 
-  updateSelectedUI();
+  renderGrid();
+  renderSelected();
 }
 
-function updateSelectedUI() {
-  document.getElementById("count").textContent = selected.length;
+function renderSelected() {
+  countEl.textContent = selected.length;
 
-  const selWrap = document.getElementById("selected");
-  selWrap.innerHTML = "";
+  selectedEl.innerHTML = "";
   selected.forEach(filename => {
     const img = document.createElement("img");
     img.src = `charms/${filename}`;
     img.alt = filename;
-    img.className = "selectedCharm";
-    selWrap.appendChild(img);
+    img.title = "Click to remove";
+
+    img.onclick = () => {
+      selected = selected.filter(x => x !== filename);
+      renderGrid();
+      renderSelected();
+    };
+
+    selectedEl.appendChild(img);
   });
 
-  // bracelet code
-  const code = selected.map(f => f.replace(".png","")).join("-");
-  document.getElementById("code").textContent = code || "—";
+  // code = filenames without .png, joined
+  const code = selected.map(x => x.replace(".png","")).join("-");
+  codeEl.textContent = code || "—";
 }
 
-// Copy button
+// Copy + Clear
 document.getElementById("copy").onclick = async () => {
-  const text = document.getElementById("code").textContent;
+  const text = codeEl.textContent;
   if (!text || text === "—") return alert("Select charms first");
-  await navigator.clipboard.writeText(text);
-  alert("Copied!");
+  try {
+    await navigator.clipboard.writeText(text);
+    alert("Copied!");
+  } catch (e) {
+    alert("Copy failed — try selecting the code and copying manually.");
+  }
 };
 
-// Render all categories
-Object.keys(charmsByCategory).forEach(renderCategory);
-updateSelectedUI();
+document.getElementById("clear").onclick = () => {
+  selected = [];
+  renderGrid();
+  renderSelected();
+};
+
+// Start
+renderTabs();
+renderGrid();
+renderSelected();
