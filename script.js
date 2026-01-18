@@ -5,7 +5,7 @@ const charmsByCategory = {
   cars:          // put your car PNGs here
   pink:              // put your pink PNGs here
   streetstyle:  //streetstyle here
-  singers : ["drake.png","pnd.png", "transform.png"]// singers here
+  singers : ["drake.png","pnd.png","transform.png"]// singers here
 };
 
 function renderCategory(categoryId) {
