@@ -1,0 +1,11 @@
+body {
+  background: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.charms img {
+  width: 80px;
+  margin: 10px;
+}
