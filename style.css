@@ -29,3 +29,31 @@ h2 {
 .charms img:hover {
   border: 2px solid white;
 }
+.charms img, .selected img, .selectedCharm {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+.charms img:hover {
+  border: 2px solid white;
+}
+
+.selected {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+button#copy{
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid white;
+  background: black;
+  color: white;
+  cursor: pointer;
+}
